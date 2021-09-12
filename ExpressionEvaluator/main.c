@@ -12,6 +12,7 @@ Ans 5
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #define EXPLEN 20
 #define STKLEN 30
 
@@ -185,6 +186,7 @@ int main(){
             // printf("A: %d\n",A);
             // printf("B: %d\n",B);
             switch(expPostfix[i]){
+                case '^': push(((int)(pow(B, A) + 0.5)));break;
                 case '*': push(B * A); break;
                 case '/': push(B / A);break;
                 case '+': push(B + A);break;
