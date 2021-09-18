@@ -8,7 +8,7 @@ i/p:
 Ans 5
 */
 /***
- * @def one digit numbers are allowed
+ * @def only binary operations are allowed
  */
 #include <stdio.h>
 #include <stdlib.h>
