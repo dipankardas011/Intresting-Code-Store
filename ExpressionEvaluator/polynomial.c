@@ -284,6 +284,5 @@ int main(int argc, char const *argv[])
     deletePoly(poly4);
     deletePoly(poly5);
 
-    remove(argv[0]);
     return 0;
 }
