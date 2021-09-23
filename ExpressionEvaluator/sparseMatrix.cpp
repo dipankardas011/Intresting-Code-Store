@@ -23,7 +23,18 @@ Sparse *insert(Sparse *mat, int r, int c, int d)
     }
     Sparse *tmp = mat;
     while (tmp->next)
+    {
+        if (tmp->row == r && tmp->col == c)
+            break;
         tmp = tmp->next;
+    }
+
+    if (tmp->row == r && tmp->col == c)
+    {
+        delete t;
+        tmp->data += d;
+        return mat;
+    }
 
     tmp->next = t;
     return mat;
@@ -52,9 +63,9 @@ void display(Sparse *matrix)
     {
         std::cout << "\033[33;38m";
         // std::cout<<"| %4d | %4d | %5d |\n",t->row, t->col, t->data);
-        std::cout << "| " <<std::setfill(' ') <<std::setw(4) << t->row
-                  << " | " <<std::setfill(' ') << std::setw(4) << t->col
-                  << " | " <<std::setfill(' ') << std::setw(5) << t->data << " |";
+        std::cout << "| " << std::setfill(' ') << std::setw(4) << t->row
+                  << " | " << std::setfill(' ') << std::setw(4) << t->col
+                  << " | " << std::setfill(' ') << std::setw(5) << t->data << " |";
         DEF_TERM;
         t = t->next;
     } while (t);
@@ -65,41 +76,50 @@ void display(Sparse *matrix)
 
 Sparse *addSparseMatrix(Sparse *m1, Sparse *m2)
 {
-    Sparse *res=0;
-    while(m1 && m2){
-        if(m1->row < m2->row){
+    Sparse *res = 0;
+    while (m1 && m2)
+    {
+        if (m1->row < m2->row)
+        {
             res = insert(res, m1->row, m1->col, m1->data);
-            m1=m1->next;
+            m1 = m1->next;
         }
-        else if(m1->row > m2->row){
+        else if (m1->row > m2->row)
+        {
             res = insert(res, m2->row, m2->col, m2->data);
-            m1=m2->next;
+            m2 = m2->next;
         }
-        else{
-            if(m1->col < m2->col){
+        else
+        {
+            if (m1->col < m2->col)
+            {
                 res = insert(res, m1->row, m1->col, m1->data);
-                m1=m1->next;
+                m1 = m1->next;
             }
-            else if(m1->col > m2->col){
+            else if (m1->col > m2->col)
+            {
                 res = insert(res, m2->row, m2->col, m2->data);
-                m2=m2->next;
+                m2 = m2->next;
             }
-            else{
-                res = insert(res, m1->row, m1->col, m1->data + m2->data);
-                m1=m1->next;
+            else
+            {
+                res = insert(res, m1->row, m1->col, (m1->data + m2->data));
+                m1 = m1->next;
                 m2 = m2->next;
             }
         }
     }
 
-    while(m1){
+    while (m1)
+    {
         res = insert(res, m1->row, m1->col, m1->data);
-        m1=m1->next;
+        m1 = m1->next;
     }
 
-    while(m2){
+    while (m2)
+    {
         res = insert(res, m2->row, m2->col, m2->data);
-        m2=m2->next;
+        m2 = m2->next;
     }
 
     return res;
@@ -131,14 +151,14 @@ int main(int argc, char const *argv[])
             break;
 
         case 2:
-            std::cout<<"\t\tMatrix 1\n";
+            std::cout << "\t\tMatrix 1\n";
             display(mat1);
             break;
         }
 
     } while (ch);
 
-    Sparse *mat2=0;
+    Sparse *mat2 = 0;
     std::cout << "Enter the valid data for sparse matrix2\n";
     do
     {
@@ -160,7 +180,7 @@ int main(int argc, char const *argv[])
             break;
 
         case 2:
-            std::cout<<"\t\tMatrix 2\n";
+            std::cout << "\t\tMatrix 2\n";
             display(mat2);
             break;
         }
