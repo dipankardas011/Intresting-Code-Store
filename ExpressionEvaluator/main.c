@@ -21,7 +21,7 @@ int top=-1;
 char stackExp[STKLEN];
 int topE = -1;
 
-int isOperator(char ch){
+int isOperand(char ch){
     if(ch >= '0' && ch <= '9')
         return 1;
     return 0;
@@ -119,7 +119,7 @@ int main(){
     int k=-1;
     int i=0;
     while(exp[i]){
-        if(!isOperator(exp[i])){
+        if(!isOperand(exp[i])){
             //then perform operations
             if(exp[i]=='('){
                 pushE(exp[i]);
@@ -154,6 +154,10 @@ int main(){
             }else{
                 //associavity
                 expPostfix[++k] = popE();
+                /***
+                 * @check whether we need to push exp[i] according to the associativity
+                 */
+                
                 // check for pushing it
             }
         }
@@ -175,7 +179,7 @@ int main(){
         B=0;
     int res=0;
     for(int i=0;expPostfix[i];i++){
-        if(isOperator(expPostfix[i]))
+        if(isOperand(expPostfix[i]))
         {
             push((int)(expPostfix[i]-'0'));
         }
