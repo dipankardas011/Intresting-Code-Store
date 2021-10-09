@@ -1,124 +1,173 @@
-/***
- */
 #include <stdio.h>
 #include <stdlib.h>
-// #define MALLOC(t, n) { \
-//     malloc(n)\
-//   }\
+#define createMemory (struct Matrix *)malloc(sizeof(struct Matrix))
+/***
+ * @diagram
+ * header needed so 
+ * header circular linklist used
+ * header 0 -> header 1 -> header 2
+ * node 0 -> node 1 -> node 2 ↺ 
+ *   ↓        ↓           ↓
+ * node r0 -> node r1 -> node r2 ↺ 
+ * ↻          ↺           ↺
+ * 
+ * header
+ * right and down
+ * element
+ * right nd down and element(row, col, value)
+ */
+enum TYPE{
+  header,
+  element
+};
 
-#define MAX_SIZE 50
-typedef enum {head, entry} tagfield;
-
-typedef struct y{
+struct Element {
   int row;
   int col;
-  int value;
-}entryNode;
+  int data;
+};
 
-typedef struct x{
-  struct x* down;
-  struct x* right;
-  tagfield tag;
+struct Matrix{
+  struct Matrix *down;
+  struct Matrix *right;
+  enum TYPE type;
+  // if type is header and element
   union {
-    struct x* next;
-    entryNode entry;
+    struct Element ele;
+    struct Matrix *next;
   }u;
-}matrixNode;
-matrixNode* hdnode[MAX_SIZE];
+};
 
-matrixNode* newNode() {
-  matrixNode* tmp = (matrixNode*)malloc(sizeof(matrixNode));
-  tmp->tag = entry;
-  return tmp;
-}
+// first create the headers required in a array down pointing to it self and right back to start
 
-matrixNode* mread() {
-  int numRows, numCols, numTerms, numHeads, i;
-  int row, col, value, currRow;
-  matrixNode *temp, *last, *node;
-  printf("Enter the number of rows, colums and the number of nonzeroterms: ");
-  scanf("%d %d %d",&numRows,&numCols, &numTerms);
-  numHeads = (numCols > numRows) ? numCols : numRows;
-  // setup header node for the list of header nodes
-  node = newNode();
-  node->tag = entry;
-  node->u.entry.row = numRows;
-  node->u.entry.col = numCols;
-
-  if(!numHeads)
-    node->right = node;
-  else {
-    // initialize the header node
-    
-    for (i = 0; i<numHeads; i++) {
-      /***
-       * @bug temp pointing to same hdnode[i] and u.next as well
-       */
-      temp = newNode();
-      node->right = hdnode[0];
-      hdnode[i] = temp;
-      hdnode[i]->tag = head;
-      hdnode[i]->right = node;
-      hdnode[i]->u.next = temp;
-    }
-    currRow = 0;
-    last= hdnode[0];  // last node in currNode
-    for (i = 0; i<numTerms; i++) {
-      printf("Enter row, column, value: ");
-      scanf("%d%d%d",&row, &col,&value);
-      
-      if(row>currRow) {
-        //close current row
-        last->right = hdnode[currRow];
-        currRow = row;
-        last = hdnode[row];
-      }
-      // MALLOC(temp, sizeof(*temp));
-      temp = newNode();
-      temp->tag = entry;
-      temp->u.entry.row = row;
-      temp->u.entry.col = col;
-      temp->u.entry.value = value;
-      last->right = temp;
-      last = temp;
-
-      hdnode[col]->u.next->down = temp;
-      hdnode[col]->u.next = temp;
-    }
-
-    // close last row;
-    last->right = hdnode[currRow];
-    // close all column lists
-    for (i=0; i<numCols;i++) 
-      hdnode[i]->u.next->down = hdnode[i];
-    //link all header nodes together
-    for(i=0;i<numHeads-1;i++)
-      hdnode[i]->u.next = hdnode[i+1];
-    hdnode[numHeads-1]->u.next = node;
-    node->right = hdnode[0];
-
-  }
-  return node;
-}
-
-void mwrite(matrixNode* node){
-  int i;
-  matrixNode *temp,*head = node->right;
-  printf("\n numRows = %d, numCols = %d\n",
-        node->u.entry.row, node->u.entry.col);
-  printf("the matrix by row, column, and value: \n");
-  for(i=0;i<node->u.entry.row;i++) {
-    for(temp =head->right; temp!=head;temp = temp->right) {
-      printf("%5d %5d %5d\n",temp->u.entry.row,temp->u.entry.col,temp->u.entry.value);
-      head = head->u.next;
-    }
-  }
-}
+struct Matrix *createSpareseMatrix();
+void displaySpareseMatrix(struct Matrix *);
 
 int main(int argc, char **argv) {
-  matrixNode* header = NULL;
-  header = mread();
-  mwrite(header);
+  struct Matrix *head = createSpareseMatrix();
+  displaySpareseMatrix(head);
   remove(argv[0]);
   return EXIT_SUCCESS;
+}
+
+struct Matrix *createSpareseMatrix() {
+  int M,N;
+  int totalValid;
+  printf("Enter M and N: ");
+  scanf("%d %d",&M, &N);
+  printf("Enter the number of valid elements: ");
+  scanf("%d",&totalValid);
+
+  struct Matrix *colHeader = (struct Matrix*)malloc(sizeof(struct Matrix)*N);
+  struct Matrix *rowHeader = (struct Matrix*)malloc(sizeof(struct Matrix)*M);
+
+  struct Matrix *matrixStart = NULL;
+  if (!matrixStart) {
+    matrixStart = createMemory;
+    matrixStart->down = rowHeader;
+    matrixStart->right = colHeader;
+    matrixStart->type = element;//so that we can store the total row, total col, total valid in data
+    {
+      matrixStart->u.ele.col = N;
+      matrixStart->u.ele.row = M;
+      matrixStart->u.ele.data = totalValid;
+    }
+  }
+
+  /***
+   * column header are initialized
+   */
+  int col;
+  // making the headers pointing to itself
+  for (col = 0; col<matrixStart->u.ele.col-1 ; col++) {
+    colHeader[col].down = &colHeader[col];// pointing to itself
+    // here the right will not be used
+    colHeader[col].type = header;
+    colHeader[col].right = NULL;
+    colHeader[col].u.next = &colHeader[col+1];
+  }
+  // last element will point to the beginning
+  // i.e. to the matrstart
+  colHeader[col].down = &colHeader[col];// pointing to itself
+  colHeader[col].type = header;
+  colHeader[col].right = NULL;
+  colHeader[col].u.next = matrixStart;
+
+  /***
+   * row header are initialized
+   */
+  int row;
+  for (row=0; row<matrixStart->u.ele.row-1;row++) {
+    // here the next will not be used
+    rowHeader[row].type = header;
+    rowHeader[row].u.next = NULL;
+    rowHeader[row].down = &rowHeader[row+1];
+    rowHeader[row].right = &rowHeader[row];
+  }
+  // last row will point back to the MAtrixStart
+  rowHeader[row].type = header;
+  rowHeader[row].u.next = NULL;
+  rowHeader[row].down = matrixStart;
+  rowHeader[row].right = &rowHeader[row];
+
+  /***
+   * elements to be entered
+   */
+  struct Matrix *temp = 0;
+  struct Matrix *rowTraversal = 0, *colTraversal = 0;
+  for (int valid = 0; valid<matrixStart->u.ele.data; valid++) {
+    temp = rowTraversal = colTraversal = 0;
+    int r, c, val;
+    printf("Enter the row, col, data to be entered: ");
+    scanf("%d %d %d",&r, &c, &val);
+    if(r>=M || c>=N)
+    {
+      fprintf(stderr, "Error invalid row index or column index!!\n");
+      valid--;
+      continue;
+    }
+    temp = createMemory;
+    temp->down = temp->right = 0;
+    temp->type = element;
+    temp->u.ele.col = c;
+    temp->u.ele.row = r;
+    temp->u.ele.data = val;
+    // now find the place to enter
+    // find the row
+    // input is row major wise
+    temp->right = &rowHeader[r];
+    temp->down = &colHeader[c];
+    // rowHeader[r].right->u.ele.data;
+    rowTraversal = (rowHeader[r].right);
+    colTraversal = (colHeader[c].down);
+    while(rowTraversal->right!=temp->right){
+      rowTraversal = rowTraversal->right;
+    }
+
+    while(colTraversal->down!=temp->down){
+      colTraversal = colTraversal->down;
+    }
+    // found the place 
+    rowTraversal->right = temp;
+    colTraversal->down = temp;
+  }
+
+  return matrixStart;
+}
+
+void displaySpareseMatrix(struct Matrix *matrix) {
+  // using the rowHeader
+  printf("Rows: %d\nCols: %d\nValidCount: %d\n",matrix->u.ele.row, matrix->u.ele.col, matrix->u.ele.data);
+  struct Matrix *row = matrix->down;
+  printf("+------+-------+------+\n");
+  printf("| Rows |Columns| Data |\n");
+  while(row != matrix) {
+    struct Matrix *temp = row->right;
+    while(temp != row) {
+      printf("| %4d | %5d | %4d |\n",temp->u.ele.row,temp->u.ele.col,temp->u.ele.data);
+      temp = temp->right;
+    }
+    row = row->down;
+  }
+  printf("+------+-------+------+\n");
 }
