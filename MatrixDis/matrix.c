@@ -9,7 +9,7 @@
 #define PROB_DIM 0.55
 #define PROB_DRIP_SPAWN 0.65
 #define NUM_DRIPS 250
-#define RANDOM_PRINTABLE_CHARACTER (33 + (rand()%90))
+#define RANDOM_PRINTABLE_CHARACTER (33+ (rand()%90))
 
 typedef struct
 {

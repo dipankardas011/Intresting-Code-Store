@@ -1,7 +1,7 @@
 #include "ui.h"
 #include <string.h>
 #include <assert.h>
-#include <curses.h>
+#include <ncurses.h>
 #include <unistd.h>
 
 
@@ -11,7 +11,7 @@ int color_map[MAX_INTENSITY + 1] = {1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 5, 3, 6};
 
 void set_colors();
 
-bool init_ui() {
+bool init_ui(int fg) {
     
 
     uiwindow = initscr();
@@ -24,7 +24,7 @@ bool init_ui() {
         return false;
     }
 
-    set_colors();
+    set_colors(fg);
 
     return true;
 }
@@ -40,6 +40,7 @@ void show_matrix() {
         for (int y = 0; y< MAXY; y++) {
             int intensity = matrix[x][y].intensity;
             color_set(color_map[intensity], NULL);
+            // wcolor_set(color_map[intensity],3, NULL);
 
             mvaddch(y,x,matrix[x][y].char_value);
         }
@@ -47,13 +48,23 @@ void show_matrix() {
     refresh();
 }
 
-void set_colors(){
+void set_colors(int foreground){
     for (int i=0;i<8;i++) {
         init_pair(i+1, i, COLOR_BLACK);
     }
     //set shades of green
-    for (int i=0;i<=5;i++) {
-        init_color(i, 0, i*200, 0);
+    int R = 0, G = 0, B = 0;
+    switch (foreground) {
+        case 1: G = 1;
+        break;
+        case 2: R = 1;
+        break;
+        case 3: B = 1;
+        break;
     }
-    init_color(6, 800, 1000, 800);
+    for (int i=0;i<=5;i++) {
+        // init_color(i, 0, i*200, 0);
+        init_color(i, i*200*R, i*200*G, i*200*B);
+    }
+    init_color(6, 1000, 1000, 1000);
 }
