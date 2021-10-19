@@ -47,6 +47,7 @@
         "ctime": "cpp",
         "iomanip": "cpp",
         "xstring": "c",
-        "xutility": "c"
+        "xutility": "c",
+        "ncurses.h": "c"
     }
 }
