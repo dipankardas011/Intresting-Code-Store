@@ -11,7 +11,7 @@ void toBinary(int N) {
     if (N > 0) {
         toBinary(N >> 1);
         printf("%d ", N&1);
-    } 
+    }
 }
 
 
