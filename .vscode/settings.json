@@ -48,6 +48,7 @@
         "iomanip": "cpp",
         "xstring": "c",
         "xutility": "c",
-        "ncurses.h": "c"
+        "ncurses.h": "c",
+        "stdbool.h": "c"
     }
 }
