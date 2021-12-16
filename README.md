@@ -9,7 +9,7 @@ docker build buildenv -t "name-of-image"
 ```
 to run the contaniner
 ```ps
-docker run --rm -it -v "${pwd}:/root/env" "name-of-image" 
+docker run --rm -it -v "${pwd}:/root/env" "name-of-image"
 ```
 ## Cleanup
 

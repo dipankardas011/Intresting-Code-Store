@@ -1,20 +1,25 @@
-CP = gcc
+CP = g++
+CC = cc
 CFLAGS = -g -w -Wall
 
+BTREE = B_treeg
+MWAYTREE = MWayTree
+B_P_TREE = B+_tree
+
 BTree:
-	$(CP) $(CFLAGS) -o ../ComplexDS/B_tree.out ../ComplexDS/B_tree.c
+	$(CP) $(CFLAGS) -o ../ComplexDS/$(BTREE).out ../ComplexDS/$(BTREE).cpp
 	echo "Compiled main.c ✅"
-	./B_tree.out
+	./$(BTREE).out
 
 MWayTree:
-	$(CP) $(CFLAGS) -o ../ComplexDS/MWayTree.out ../ComplexDS/MWayTree.c
+	$(CC) $(CFLAGS) -o ../ComplexDS/$(MWAYTREE).out ../ComplexDS/$(MWAYTREE).c
 	echo "Compiled main.c ✅"
-	./MWayTree.out
+	./$(MWAYTREE).out
 
 B+Tree:
-	$(CP) $(CFLAGS) -o ../ComplexDS/B+_tree.out ../ComplexDS/B+_tree.c
+	$(CC) $(CFLAGS) -o ../ComplexDS/$(B_P_TREE).out ../ComplexDS/$(B_P_TREE).c
 	echo "Compiled main.c ✅"
-	./B+_tree.out
+	./$(B_P_TREE).out
 
 
 clean:

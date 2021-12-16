@@ -50,6 +50,11 @@
         "xutility": "c",
         "ncurses.h": "c",
         "stdbool.h": "c",
-        "xiosbase": "c"
+        "xiosbase": "c",
+        "xlocale": "cpp",
+        "xlocinfo": "cpp",
+        "xlocmon": "cpp",
+        "xlocnum": "cpp",
+        "xmemory": "cpp"
     }
 }
