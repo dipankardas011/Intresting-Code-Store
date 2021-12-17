@@ -305,8 +305,12 @@ void deleteNode(BTree** root, int dkey)
             free(delRoot);
             break;
         }
+        case Success:{
+            break;
+        }
         default:{
-            return;
+            fprintf(stderr, "Some other Errors(Line:%d)", __LINE__);
+            break;
         }
     }
 }
@@ -380,6 +384,9 @@ int totalKeys(BTree *ptr)
     if (ptr) {
         int count = 1;
         if (ptr->availableKeys >= 1) {
+            /**
+             * @todo to improve this function 
+             */
             count += totalKeys(ptr->childrens[0]);
             count += totalKeys(ptr->childrens[1]);
             if (ptr->childrens == 2)
@@ -403,6 +410,9 @@ void printTotal(BTree *ptr)
   **/
 int getMin(BTree *ptr)
 {
+    /**
+     * @todo to improve this function 
+     */
     if (ptr){
         int min;
         if (ptr->childrens[0] != NULL)
@@ -419,6 +429,9 @@ int getMin(BTree *ptr)
   **/
 int getMax(BTree *ptr)
 {
+    /**
+     * @todo to improve this function 
+     */
     if (ptr) {
         int max;
         if (ptr->childrens == 1) {
