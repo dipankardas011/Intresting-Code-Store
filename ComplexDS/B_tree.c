@@ -7,6 +7,15 @@
  **/
 #define M 3 
 #define Ml (M-1)/2
+#define welcome printf("[ 1 ] Insert\n\
+[ 2 ] Display\n\
+[ 3 ] Delete\n\
+[ 4 ] Search\n\
+[ 5 ] Max & Min Keys\n\
+[ 6 ] No. of Keys\n\
+[ 0 ] EXIT\n\
+> ") 
+
 
 
 typedef enum KeyStatus{
@@ -382,15 +391,10 @@ void search(BTree* root, int skey)
 int totalKeys(BTree *ptr)
 {
     if (ptr) {
-        int count = 1;
-        if (ptr->availableKeys >= 1) {
-            /**
-             * @todo to improve this function 
-             */
-            count += totalKeys(ptr->childrens[0]);
-            count += totalKeys(ptr->childrens[1]);
-            if (ptr->childrens == 2)
-                count += totalKeys(ptr->childrens[2]) + 1;
+        int count = 0;
+        if (ptr->availableKeys) {
+            for (int i = 0; i <= ptr->availableKeys;i++)
+                count += 1 + totalKeys(ptr->childrens[i]);
         }
         return count;
     }
@@ -402,7 +406,7 @@ int totalKeys(BTree *ptr)
   **/
 void printTotal(BTree *ptr)
 {
-    printf("%d\n", totalKeys(ptr));
+    printf("Total Number of Keys: %d\n", totalKeys(ptr));
 }
 
 /** Function that returns the smallest key found in the tree.
@@ -410,18 +414,9 @@ void printTotal(BTree *ptr)
   **/
 int getMin(BTree *ptr)
 {
-    /**
-     * @todo to improve this function 
-     */
-    if (ptr){
-        int min;
-        if (ptr->childrens[0] != NULL)
-            min = getMin(ptr->childrens[0]);
-        else
-            min = ptr->keys[0];
-        return min;
-    }
-    return 0;
+    while(ptr->childrens[0])
+        ptr = ptr->childrens[0];
+    return ptr->keys[0];
 }
 
 /** Function that returns the largest key found in the tree.
@@ -429,26 +424,9 @@ int getMin(BTree *ptr)
   **/
 int getMax(BTree *ptr)
 {
-    /**
-     * @todo to improve this function 
-     */
-    if (ptr) {
-        int max;
-        if (ptr->childrens == 1) {
-            if (ptr->childrens[1] != NULL)
-                max = getMax(ptr->childrens[1]);
-            else
-                max = ptr->keys[0];
-        }
-        if (ptr->childrens == 2) {
-            if (ptr->childrens[2] != NULL)
-                max = getMax(ptr->childrens[2]);
-            else
-                max = ptr->keys[1];
-        }
-        return max;
-    }
-    return 0;
+    while(ptr->childrens[ptr->availableKeys])
+        ptr = ptr->childrens[ptr->availableKeys];
+    return ptr->keys[ptr->availableKeys - 1];
 }
 
 /** Function that prints the smallest and largest keys found in the tree.
@@ -456,7 +434,7 @@ int getMax(BTree *ptr)
   **/
 void getMinMax(BTree *ptr)
 {
-    printf("%d %d\n", getMin(ptr), getMax(ptr));
+    printf("Smallest Data: %d : Largest Data: %d\n", getMin(ptr), getMax(ptr));
 }
 
 /** Function that determines the largest number.
@@ -466,47 +444,22 @@ void getMinMax(BTree *ptr)
   **/
 int max(int first, int second, int third)
 {
-    int max = first;
-    if (second > max)
-        max = second;
-    if (third > max)
-        max = third;
+    int max;
+    max = second > first ? second : first;
+    max = third > max ? third : max;
     return max;
 }
 
-/** Function that finds the maximum level in the node and returns it as an integer.
-  * @param ptr the node to find the maximum level for.
-  **/
-int maxLevel(BTree *ptr)
+void deallocateBTree(BTree* root)
 {
-    if (ptr) {
-        int l = 0, mr = 0, r = 0, max_depth;
-        if (ptr->childrens[0] != NULL)
-            l = maxLevel(ptr->childrens[0]);
-        
-        if (ptr->childrens[1] != NULL)
-            mr = maxLevel(ptr->childrens[1]);
-
-        if (ptr->availableKeys == 2) {
-            if (ptr->childrens[2] != NULL)
-                r = maxLevel(ptr->childrens[2]);
-        }
-        max_depth = max(l, mr, r) + 1;
-        return max_depth;
+    /*PostOrder to our rescue*/
+    if(root){
+        for (int i = 0; i <= root->availableKeys; i++)
+            deallocateBTree(root->childrens[i]);
+        printf("Deleting firstKey{%d}\n", root->keys[0]);
+        fprintf(stdout, "deallocating Memory - 0x%x\n", root);
+        free(root);
     }
-    return 0;
-}
-
-/** Function that prints the maximum level in the tree.
-  * @param ptr the tree to find the maximum level for.
-  **/
-void printMaxLevel(BTree *ptr)
-{
-    int max = maxLevel(ptr) - 1;
-    if (max == -1)
-        printf("tree is empty\n");
-    else
-        printf("%d\n", max);
 }
 
 int main(int argc, char **argv)
@@ -514,7 +467,7 @@ int main(int argc, char **argv)
     BTree *root = NULL;
     int ch;
     do{
-        printf("[ 1 ] Insert\n[ 2 ] Display\n[ 3 ] Delete\n[ 4 ] Search\n[ 0 ] EXIT\n> ");
+        welcome;
         scanf("%d", &ch);
         int key;
         switch(ch){
@@ -540,7 +493,16 @@ int main(int argc, char **argv)
                 search(root, key);
                 break;
             }
+            case 5:{
+                getMinMax(root);
+                break;
+            }
+            case 6:{
+                printTotal(root);
+                break;
+            }
         }
     } while (ch);
+    deallocateBTree(root);
     return EXIT_SUCCESS;
 }
