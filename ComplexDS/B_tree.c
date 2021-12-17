@@ -33,6 +33,13 @@ void nodeLevelDis(BTree *);
 void inorderTrav(BTree *);
 void deleteNode(BTree **, int);
 KeyStatus Deletion(BTree *, BTree *, int);
+int totalKeys(BTree *);
+void printTotal(BTree *);
+int getMin(BTree *);
+int getMax(BTree *);
+void getMinMax(BTree *);
+int maxLevel(BTree *);
+void printMaxLevel(BTree *);
 
 int searchPosition(BTree *node, int skey)
 {
@@ -362,6 +369,131 @@ void search(BTree* root, int skey)
         ptr = ptr->childrens[pos];
     }
     printf("Key %d is not available\n", skey);
+}
+
+
+/** Function that returns the total number of keys in the tree.
+  * @param ptr the pointer to the node you are currently working with
+  **/
+int totalKeys(BTree *ptr)
+{
+    if (ptr) {
+        int count = 1;
+        if (ptr->availableKeys >= 1) {
+            count += totalKeys(ptr->childrens[0]);
+            count += totalKeys(ptr->childrens[1]);
+            if (ptr->childrens == 2)
+                count += totalKeys(ptr->childrens[2]) + 1;
+        }
+        return count;
+    }
+    return 0;
+}
+
+/** Function that prints the total number of keys in the tree.
+  * @param ptr the pointer to the node you are currently working with
+  **/
+void printTotal(BTree *ptr)
+{
+    printf("%d\n", totalKeys(ptr));
+}
+
+/** Function that returns the smallest key found in the tree.
+  * @param ptr the pointer to the node you are currently working with
+  **/
+int getMin(BTree *ptr)
+{
+    if (ptr){
+        int min;
+        if (ptr->childrens[0] != NULL)
+            min = getMin(ptr->childrens[0]);
+        else
+            min = ptr->keys[0];
+        return min;
+    }
+    return 0;
+}
+
+/** Function that returns the largest key found in the tree.
+  * @param ptr, the pointer to the node you are currently working with
+  **/
+int getMax(BTree *ptr)
+{
+    if (ptr) {
+        int max;
+        if (ptr->childrens == 1) {
+            if (ptr->childrens[1] != NULL)
+                max = getMax(ptr->childrens[1]);
+            else
+                max = ptr->keys[0];
+        }
+        if (ptr->childrens == 2) {
+            if (ptr->childrens[2] != NULL)
+                max = getMax(ptr->childrens[2]);
+            else
+                max = ptr->keys[1];
+        }
+        return max;
+    }
+    return 0;
+}
+
+/** Function that prints the smallest and largest keys found in the tree.
+  * @param ptr the pointer to the node you are currently working with
+  **/
+void getMinMax(BTree *ptr)
+{
+    printf("%d %d\n", getMin(ptr), getMax(ptr));
+}
+
+/** Function that determines the largest number.
+  * @param first first integer to compare.
+  * @param second second integer to compare.
+  * @param third third integer to compare.
+  **/
+int max(int first, int second, int third)
+{
+    int max = first;
+    if (second > max)
+        max = second;
+    if (third > max)
+        max = third;
+    return max;
+}
+
+/** Function that finds the maximum level in the node and returns it as an integer.
+  * @param ptr the node to find the maximum level for.
+  **/
+int maxLevel(BTree *ptr)
+{
+    if (ptr) {
+        int l = 0, mr = 0, r = 0, max_depth;
+        if (ptr->childrens[0] != NULL)
+            l = maxLevel(ptr->childrens[0]);
+        
+        if (ptr->childrens[1] != NULL)
+            mr = maxLevel(ptr->childrens[1]);
+
+        if (ptr->availableKeys == 2) {
+            if (ptr->childrens[2] != NULL)
+                r = maxLevel(ptr->childrens[2]);
+        }
+        max_depth = max(l, mr, r) + 1;
+        return max_depth;
+    }
+    return 0;
+}
+
+/** Function that prints the maximum level in the tree.
+  * @param ptr the tree to find the maximum level for.
+  **/
+void printMaxLevel(BTree *ptr)
+{
+    int max = maxLevel(ptr) - 1;
+    if (max == -1)
+        printf("tree is empty\n");
+    else
+        printf("%d\n", max);
 }
 
 int main(int argc, char **argv)
