@@ -2,12 +2,12 @@ CP = g++
 CC = cc
 CFLAGS = -g -w -Wall
 
-BTREE = B_treeg
+BTREE = B_tree
 MWAYTREE = MWayTree
 B_P_TREE = B+_tree
 
 BTree:
-	$(CP) $(CFLAGS) -o ../ComplexDS/$(BTREE).out ../ComplexDS/$(BTREE).cpp
+	$(CC) $(CFLAGS) -o ../ComplexDS/$(BTREE).out ../ComplexDS/$(BTREE).c
 	echo "Compiled main.c ✅"
 	./$(BTREE).out
 
