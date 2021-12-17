@@ -16,7 +16,8 @@
 [ 0 ] EXIT\n\
 > ") 
 
-
+#define DEFCOLPRINT printf("\033[31;43m")
+#define UNDEFCOLPRINT printf("\033[0m")
 
 typedef enum KeyStatus{
     Duplicate,
@@ -356,7 +357,9 @@ void nodeLevelDis(BTree *root)
 void displayBTree(BTree *root)
 {
     fprintf(stdout, "Inorder Trav [ ");
+    DEFCOLPRINT;
     inorderTrav(root);
+    UNDEFCOLPRINT;
     fprintf(stdout, "]\n");
 
     fprintf(stdout, "Every Node {\n");
@@ -392,11 +395,9 @@ int totalKeys(BTree *ptr)
 {
     if (ptr) {
         int count = 0;
-        if (ptr->availableKeys) {
-            for (int i = 0; i <= ptr->availableKeys;i++)
-                count += 1 + totalKeys(ptr->childrens[i]);
-        }
-        return count;
+        for (int i = 0; ptr->availableKeys && i <= ptr->availableKeys; i++)
+            count = count + 1 + totalKeys(ptr->childrens[i]);
+        return count - 1;
     }
     return 0;
 }
@@ -406,7 +407,10 @@ int totalKeys(BTree *ptr)
   **/
 void printTotal(BTree *ptr)
 {
-    printf("Total Number of Keys: %d\n", totalKeys(ptr));
+    DEFCOLPRINT;
+    printf("Total Number of Keys: %d", totalKeys(ptr));
+    UNDEFCOLPRINT;
+    printf("\n");
 }
 
 /** Function that returns the smallest key found in the tree.
@@ -434,7 +438,10 @@ int getMax(BTree *ptr)
   **/
 void getMinMax(BTree *ptr)
 {
-    printf("Smallest Data: %d : Largest Data: %d\n", getMin(ptr), getMax(ptr));
+    DEFCOLPRINT;
+    printf("Smallest Data: %d : Largest Data: %d", getMin(ptr), getMax(ptr));
+    UNDEFCOLPRINT;
+    printf("\n");
 }
 
 /** Function that determines the largest number.
@@ -456,7 +463,6 @@ void deallocateBTree(BTree* root)
     if(root){
         for (int i = 0; i <= root->availableKeys; i++)
             deallocateBTree(root->childrens[i]);
-        printf("Deleting firstKey{%d}\n", root->keys[0]);
         fprintf(stdout, "deallocating Memory - 0x%x\n", root);
         free(root);
     }
