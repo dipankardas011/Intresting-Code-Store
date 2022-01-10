@@ -2,8 +2,9 @@ CC = gcc
 CFLAGS = -g -Wall
 OBJS = main.o matrix.o ui.o
 
-all: main
-
+run: 
+	./main
+	
 main: $(OBJS)
 	# $(CC) $(CFLAGS) -o $@ $^ -lncurses -std=c99
 	$(CC) $(CFLAGS) -o $@ $^ -lncursesw -std=c99
