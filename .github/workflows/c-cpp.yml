@@ -1,0 +1,21 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ matrix ]
+  pull_request:
+    branches: [ matrix ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: configure
+      run: ./configure
+    - name: makeCompile
+      run: "make main"
+    - name: makeRUN
+      run: "make run"
