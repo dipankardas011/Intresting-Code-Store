@@ -22,10 +22,11 @@ int main(int argc, char **argv)
     printf("\033[43mWelcome to MATRIX");
     DEF_TERM;
     printf("\nEnter 1 for green 2 for red 3 for blue\n> ");DEF_TERM;
-    int ch;
-    scanf("%d",&ch);
+    int ch = 1;
+    // scanf("%d",&ch);
 
-    assert(ch == 1 || ch == 2 || ch == 3);
+    // assert(ch == 1 || ch == 2 || ch == 3);
+
 
     if (!init_ui(ch)) 
         return EXIT_FAILURE;
