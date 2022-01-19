@@ -4,7 +4,7 @@ OBJS = main.o matrix.o ui.o
 
 run: 
 	./main
-	
+
 main: $(OBJS)
 	# $(CC) $(CFLAGS) -o $@ $^ -lncurses -std=c99
 	$(CC) $(CFLAGS) -o $@ $^ -lncursesw -std=c99
