@@ -1,4 +1,4 @@
-chmod -R 777 *.*
+sudo chmod -R 777 *.*
 
 echo "Done the permission changes"
 
