@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <ncurses.h>
 #include <wchar.h>
-#include <assert.h>
+// #include <assert.h>
 
 #include <locale.h>
 

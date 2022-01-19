@@ -1,6 +1,6 @@
 #include "ui.h"
 #include <string.h>
-#include <assert.h>
+// #include <assert.h>
 #include <ncurses.h>
 #include <unistd.h>
 
