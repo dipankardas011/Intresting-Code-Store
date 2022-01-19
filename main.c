@@ -27,10 +27,9 @@ int main(int argc, char **argv)
 
     // assert(ch == 1 || ch == 2 || ch == 3);
 
-
+    int iterations = ITERATIONS;
     if (!init_ui(ch)) 
         return EXIT_FAILURE;
-    
 
     matrix_init();
     do {
@@ -38,7 +37,7 @@ int main(int argc, char **argv)
         show_matrix();
 
         usleep(REFRESH_DELAY);
-    } while (1);//getchar_unlocked()!='Q'
+    } while (iterations-- > 0);//getchar_unlocked()!='Q'
     cleanup_ui();
     DEF_TERM;
     return EXIT_SUCCESS;
