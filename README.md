@@ -1,11 +1,17 @@
-# Intresting Codes
+# List of Intresting Codes
 
 1. Expression Evaluator
-2. 3N+1 Problem
+2. 3N+1 Problem (Mathematics)
+3. Complex DS
+4. Convert Number
+5. Matrix display
+6. Sparse Matrix
+7. Todo app
 
+# Not in use
 ## to run the container
 ```bash
-docker build buildenv -t "name-of-image"
+docker build -t "name-of-image"
 ```
 to run the contaniner
 ```ps
