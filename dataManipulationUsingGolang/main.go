@@ -49,4 +49,5 @@ func main() {
 
 	newDataSet := AccessingData()
 	fmt.Println(newDataSet)
+	ReadingPdfs()
 }
